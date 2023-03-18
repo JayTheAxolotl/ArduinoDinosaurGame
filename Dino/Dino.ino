@@ -1,5 +1,6 @@
 // include the library code:
 #include <LiquidCrystal.h>
+#include <HardwareSerial.h>
 
 // Creates an LCD object. Parameters: (rs, enable, d4, d5, d6, d7)
 LiquidCrystal lcd(0, 1, 2, 3, 4, 5);
@@ -9,7 +10,8 @@ int at = 0; // air time
 int x = 0; // also counts as score until you "beat" the game
 int score = 0;
 int y = 0;
-int run = true;
+int speed = 60-((x/10) * (25/speed));
+bool run = true;
 bool dead = false;
 char field[] = {'@', '_', '_', '_', '#', '_', '_', '_', '#', '_', '_', '_', '_' ,'_', '#', '_'};
 char l1[] =    {'@', '_', '_', '_', '#', '_', '_', '_', '#', '_', '_', '_', '_' ,'_', '#', '_'}; // level 1
@@ -81,7 +83,9 @@ void loop()
   }
 
   frame += 1;
-  if(frame == 60){
+  if(frame == round(speed)){
+    Serial.println(x);    
+    speed = 60-((x/10) * (250/(speed+25)));
     if(dead == false){
       if(x == 15){
         y = 0;
