@@ -1,9 +1,9 @@
 // include the library code:
 #include <LiquidCrystal.h>
-#include <HardwareSerial.h>
+
 
 // Creates an LCD object. Parameters: (rs, enable, d4, d5, d6, d7)
-LiquidCrystal lcd(0, 1, 2, 3, 4, 5);
+LiquidCrystal lcd(8, 9, 2, 3, 4, 5);
 int frame = 0;
 int np = 0; // not pressed
 int at = 0; // air time
@@ -36,10 +36,14 @@ String join(char* a, int size)
 
 void setup() 
 {
+
+  Serial.begin(9600);
+  Serial.println("\n");
+  
   pinMode(6, INPUT);
 	// set up the LCD's number of columns and rows:
 	lcd.begin(16, 2);
-
+  
 	// Clears the LCD screen
 	lcd.clear();
 }
@@ -59,13 +63,11 @@ void loop()
   if(cacti[x] == '#'){
     if(y == 0){
       dead = true;
-      score += x;
       lcd.clear();
       cacti[x] = '_';
     }
   }
   if(x == 15){
-    score += x;
     x = 0;
     if(field[4] == l1[4]){
       for(int i = 0; i<16; i++){
@@ -85,7 +87,8 @@ void loop()
   frame += 1;
   if(frame == round(speed)){
     Serial.println(x);    
-    speed = 60-((x/10) * (250/(speed+25)));
+    score += 1;
+    speed = 60-((score/10) * (250/(speed+25)));
     if(dead == false){
       if(x == 15){
         y = 0;
